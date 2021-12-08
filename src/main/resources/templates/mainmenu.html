@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Main menu</title>
+</head>
+<body>
+
+<ul>
+    <li th:each="embeddedSystem : ${embeddedSystems}">
+        <th:block th:text="${embeddedSystem.toString()} ">
+        </th:block>
+    </li>
+</ul>
+<script type="text/javascript" src="stream.js"></script>
+
+<label id="label"></label>
+<form method="post" action="/clearAlert">
+    <input type="submit" value="Clear alert."/>
+</form>
+
+
+</body>
+</html>
