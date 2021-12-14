@@ -3,7 +3,6 @@ package com.example.zad2.repositories;
 import com.example.zad2.bootStrap.DataHolder;
 import com.example.zad2.model.EmbeddedSystem;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -14,8 +13,12 @@ public class InMemoryEmbeddedSystemRepository {
         return DataHolder.embeddedSystemList;
     }
 
-    public Flux<String> getUSSAlerts(String s){
-        return (Flux<String>) DataHolder.embeddedSystemList.get(0).execute(s);
+    public String moveServoMotor(String path){
+        return (String) DataHolder.embeddedSystemList.stream()
+                .filter(i -> i.getEName().equals("Servo motor operator"))
+                .findFirst()
+                .get()
+                .execute(path);
     }
 
 }

@@ -1,25 +1,49 @@
 package com.example.zad2.model;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class ServoMotor extends Peripheral{
+
     public ServoMotor(){
         pName = "ServoMotor";
         pDescription = "A motor that is designed for precise movement.";
     }
 
     @Override
-    public Object execute(Object... o) {
-        HttpURLConnection connection = (HttpURLConnection) o[0];
-        URL url = (URL) o[1];
-        if (o.length == 1)
-            System.out.printf("Sending %s to the %s", Arrays.stream(o).map(Object::toString).collect(Collectors.joining()),  this.getPName());
-        else
-            System.out.println("Invalid input.");
-        return null;
+    public String execute(Object... o) {
+        HttpURLConnection connection = null;
+        BufferedReader reader;
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            connection = ((EmbeddedSystem) o[0]).openConnection();//open connection
+
+            connection.setRequestMethod("POST");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+
+            int status = connection.getResponseCode();
+            if (status < 299 && status > 199) {
+                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                while ((line = reader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                reader.close();
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null)
+                connection.disconnect();
+        }
+        return stringBuilder.toString();
     }
 
 }

@@ -14,9 +14,17 @@
 </ul>
 <script type="text/javascript" src="stream.js"></script>
 
-<label id="label"></label>
+<label id="USSLabel"></label>
+
 <form method="post" action="/clearAlert">
     <input type="submit" value="Clear alert."/>
+</form>
+
+<br><br>
+
+<form method="post" action="/moveServoMotor">
+    <input type="submit" value="<=" name="direction"> <input type="submit" value="=>" name="direction">
+    <label id="servoLabel"><th:block th:text="${servoCurrentDegree}"/></label>
 </form>
 
 

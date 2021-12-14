@@ -2,7 +2,6 @@ package com.example.zad2.controllers;
 
 import com.example.zad2.model.User;
 import com.example.zad2.services.EmbeddedSystemService;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +20,7 @@ import java.util.Collections;
 public class MainMenuController {
     private final EmbeddedSystemService embeddedSystemService;
     String ussAlerts = "-1";
+    Integer servoCurrentDegree = 0;
 
     public MainMenuController(EmbeddedSystemService embeddedSystemService) {
         this.embeddedSystemService = embeddedSystemService;
@@ -50,16 +50,18 @@ public class MainMenuController {
 
 
     @GetMapping("/mainMenu")
-    public String getMainMenu(Model model, HttpServletRequest request){
+    public String getMainMenu(Model model){
         model.addAttribute("embeddedSystems", this.embeddedSystemService.listAll());
-        return "mainmenu";//<- треба да се соовпаѓа со .html датотека во templates
+        model.addAttribute("servoCurrentDegree", servoCurrentDegree);
+        return "mainmenu";
     }
 
     @GetMapping(value = "/ussStream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> ussStream(){
         return Flux.interval(Duration.ofMillis(500))
-                .map(i-> Collections.singletonList(ussAlerts))
-                .flatMapIterable(stream -> stream);
+                .map(i -> Collections.singletonList(ussAlerts))
+                .flatMapIterable(stream -> stream)
+                .distinctUntilChanged();
     }
 
 
@@ -70,8 +72,29 @@ public class MainMenuController {
     }
 
     @PostMapping("/clearAlert")
-    public String clearAlert(HttpServletRequest request){
+    public String clearAlert(){
         ussAlerts = "-1";
         return "redirect:/mainMenu";
+    }
+
+    @PostMapping("/moveServoMotor")
+    public String moveServoMotorRight(@RequestParam String direction){
+        embeddedSystemService.moveServoMotor(direction.equals("<=") ? "/moveLeft" : "/moveRight");
+        return "redirect:/mainMenu";
+    }
+
+
+    @GetMapping(value = "/servoStream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Integer> servoStream(){
+        return Flux.interval(Duration.ofMillis(500))
+                .map(i -> Collections.singletonList(servoCurrentDegree))
+                .flatMapIterable(stream -> stream)
+                .distinctUntilChanged();
+    }
+
+    @PostMapping("/servoStream")
+    public String servoWasMoved(@RequestBody String position){
+        servoCurrentDegree = Integer.parseInt(position.split("=")[1]);
+        return "usstemplate";
     }
 }

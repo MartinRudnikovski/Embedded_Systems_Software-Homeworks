@@ -23,7 +23,8 @@ public class ValidateUserFilter implements Filter {
         if(request.getSession().getAttribute("user") == null
                 && !request.getServletPath().equals("/login")
                 && !(request.getServletPath().equals("/mainMenu") && request.getMethod().equals("POST"))
-                && !(request.getServletPath().equals("/ussStream") && request.getMethod().equals("POST")))
+                && !(request.getServletPath().equals("/ussStream") && request.getMethod().equals("POST"))
+                && !(request.getServletPath().equals("/servoStream") && request.getMethod().equals("POST")))
             response.sendRedirect("/login");
         else
             filterChain.doFilter(servletRequest, servletResponse);

@@ -1,11 +1,12 @@
-let labelElement
+let USSLabelElement
+let ServoLabelElement
 
 class Stream{
     constructor(endpoint) {
         this.endpoint = endpoint
         this.eventSource = null
     }
-    init() {
+    init(handleEvent) {
         this.eventSource = new EventSource(this.endpoint)
         this.eventSource.addEventListener("message", handleEvent)
         this.eventSource.onerror = () =>{
@@ -19,21 +20,30 @@ class Stream{
     }
 }
 
-const handleEvent = (event) => {
+const handleEventUSS = (event) => {
     const val = JSON.parse(event.data)
-    console.log(val)
-    if (val <= 20 && val > -1)
-        labelElement.innerText = "Someone has entered the room!"
+    if (val <= 20 && val > -1){
+        USSLabelElement.innerText = "Someone has entered the room!"
+        USSStream.close()
+    }
+
 }
 
+const handleEventServo = (event) => {
+    ServoLabelElement.innerText = JSON.parse(event.data)
+}
 
-const stream = new Stream("/ussStream")
+const USSStream = new Stream("/ussStream")
+const ServoStream = new Stream("/servoStream")
 
 window.onload = () => {
-    stream.init()
-     labelElement = document.getElementById("label")
+    USSStream.init(handleEventUSS)
+    ServoStream.init(handleEventServo)
+    USSLabelElement = document.getElementById("USSLabel")
+    ServoLabelElement = document.getElementById("servoLabel")
 }
 
 window.onbeforeunload = () => {
-    stream.close()
+    USSStream.close()
+    ServoStream.close()
 }

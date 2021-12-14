@@ -1,9 +1,5 @@
 package com.example.zad2.model;
 
-import reactor.core.publisher.Flux;
-
-import java.time.Duration;
-import java.util.Collections;
 
 public class UltraSonicSensor extends Peripheral{
     public UltraSonicSensor() {
@@ -12,9 +8,7 @@ public class UltraSonicSensor extends Peripheral{
     }
 
     @Override
-    public Flux<String> execute(Object... o){
-        return Flux.interval(Duration.ofMillis(500))
-                .map(i-> Collections.singletonList((String) o[0]))
-                .flatMapIterable(stream -> stream);
+    public Object execute(Object... o){
+        return null;
     }
 }

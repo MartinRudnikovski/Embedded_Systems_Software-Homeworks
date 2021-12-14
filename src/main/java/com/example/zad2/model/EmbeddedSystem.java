@@ -3,8 +3,8 @@ package com.example.zad2.model;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,15 +16,18 @@ public abstract class EmbeddedSystem {
     String eDescription;
     List<Peripheral> peripheralList;
 
+    private String url;
 
-    private HttpURLConnection httpURLConnection;
-    private URL url;
-
-    public EmbeddedSystem(@NonNull String eName, @NonNull String eDescription,@NonNull Peripheral... peripherals) {
+    public EmbeddedSystem(@NonNull String eName, @NonNull String eDescription,@NonNull String url, @NonNull Peripheral... peripherals) {
         this.eName = eName;
         this.eDescription = eDescription;
         this.peripheralList = new ArrayList<>();
         this.peripheralList.addAll(Arrays.asList(peripherals));
+        this.url = url;
+    }
+
+    public HttpURLConnection openConnection() throws IOException {
+        return (HttpURLConnection) new URL(url).openConnection();
     }
 
     @Override

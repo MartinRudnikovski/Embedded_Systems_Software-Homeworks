@@ -4,9 +4,7 @@ import com.example.zad2.model.EmbeddedSystem;
 import com.example.zad2.repositories.InMemoryEmbeddedSystemRepository;
 import com.example.zad2.services.EmbeddedSystemService;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
@@ -26,16 +24,10 @@ public class EmbeddedSystemImpl implements EmbeddedSystemService {
     }
 
     @Override
-    public Flux<String> getUSSAlerts(String s) {
-        return inMemoryEmbeddedSystemRepository.getUSSAlerts(s);
+    public void moveServoMotor(String path) {
+        inMemoryEmbeddedSystemRepository.moveServoMotor(path);
     }
 
-    //==================================Shortcuts
-    private EmbeddedSystem getCaller(HttpServletRequest request){
-        return  inMemoryEmbeddedSystemRepository.getAll().stream()
-                .filter(i -> request.getParameter(i.getEName()) != null)
-                .findFirst().get();
 
-    }
 
 }
