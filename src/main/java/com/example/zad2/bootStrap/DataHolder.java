@@ -1,8 +1,6 @@
 package com.example.zad2.bootStrap;
 
-import com.example.zad2.model.EmbeddedSystem;
-import com.example.zad2.model.ServoMotor;
-import com.example.zad2.model.UltraSonicSensor;
+import com.example.zad2.model.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -37,5 +35,18 @@ public class DataHolder {
             }
         });
 
+        embeddedSystemList.add(new EmbeddedSystem(
+                "Security camera",
+                "Can stream live video with camera and uses ultrasonic sensor to detect movement.",
+                "http://192.168.100.24/led",
+                new UltraSonicSensor(),
+                new Led(),
+                new Camera()
+        ) {
+            @Override
+            public String execute(Object... o) {
+                return (String) this.getPeripheralList().stream().filter(i-> i instanceof Led).findFirst().get().execute(this, o);
+            }
+        });
     }
 }

@@ -30,6 +30,11 @@
 <label id="infLabel"></label>
 <br>
 <input type="button" value="Start live stream." onclick="enableVideo()" id="img_bttn">
+
+<form method="post", action="/led">
+    <input type="submit" value="led on/off">
+</form>
+
 <form method="post" action="/infOk">
     <input type="submit" value="Ok">
 </form>

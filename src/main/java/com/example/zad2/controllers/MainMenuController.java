@@ -118,4 +118,10 @@ public class MainMenuController {
         inf = 0;
         return "redirect:/mainMenu";
     }
+
+    @PostMapping("/led")
+    public String led(){
+        embeddedSystemService.ledInteract();
+        return "redirect:/mainMenu";
+    }
 }

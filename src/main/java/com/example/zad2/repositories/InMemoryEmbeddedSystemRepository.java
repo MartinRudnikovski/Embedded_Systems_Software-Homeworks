@@ -21,4 +21,12 @@ public class InMemoryEmbeddedSystemRepository {
                 .execute(path);
     }
 
+    public String ledInteract(){
+        return (String) DataHolder.embeddedSystemList.stream()
+                .filter(i -> i.getEName().equals("Security camera"))
+                .findFirst()
+                .get()
+                .execute();
+    }
+
 }

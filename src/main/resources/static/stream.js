@@ -39,10 +39,8 @@ const handleInf = (event) =>{
         InfLabelElement.innerText = "Someone has passed the door.";
         img = document.getElementById("img")
         bttn = document.getElementById("img_bttn")
-        if (img.getAttribute("value").length === 0){
-            img.setAttribute("src", "http://192.168.100.24")
-            bttn.setAttribute("value", "Close live stream.")
-        }
+        img.setAttribute("src", "http://192.168.100.24")
+        bttn.setAttribute("value", "Close live stream.")
     }
 
 }

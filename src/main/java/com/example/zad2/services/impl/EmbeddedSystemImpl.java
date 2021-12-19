@@ -28,6 +28,10 @@ public class EmbeddedSystemImpl implements EmbeddedSystemService {
         inMemoryEmbeddedSystemRepository.moveServoMotor(path);
     }
 
+    @Override
+    public void ledInteract() {
+        inMemoryEmbeddedSystemRepository.ledInteract();
+    }
 
 
 }

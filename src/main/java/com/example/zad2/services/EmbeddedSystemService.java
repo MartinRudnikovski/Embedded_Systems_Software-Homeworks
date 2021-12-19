@@ -10,4 +10,6 @@ public interface EmbeddedSystemService {
 
     void moveServoMotor(String path);
 
+    void ledInteract();
+
 }
