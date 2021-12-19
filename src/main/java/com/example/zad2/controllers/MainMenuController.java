@@ -112,4 +112,10 @@ public class MainMenuController {
                 .flatMapIterable(stream -> stream)
                 .distinctUntilChanged();
     }
+
+    @PostMapping("infOk")
+    public String isOk(){
+        inf = 0;
+        return "redirect:/mainMenu";
+    }
 }

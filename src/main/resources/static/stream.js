@@ -79,3 +79,7 @@ function enableVideo(){
         bttn.setAttribute("value", "Start live stream.")
     }
 }
+
+function idDisabled(){
+
+}
