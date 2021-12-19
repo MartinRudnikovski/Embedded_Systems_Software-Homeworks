@@ -33,7 +33,7 @@ public class DataHolder {
             @Override
             public String execute(Object... o)  {
                 setUrl(String.format("http://192.168.100.27%s",  o[0]));
-                return (String) getPeripheralList().get(0).execute(this, o);
+                return (String) this.getPeripheralList().get(0).execute(this, o);
             }
         });
 

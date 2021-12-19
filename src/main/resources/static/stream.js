@@ -1,5 +1,6 @@
 let USSLabelElement
 let ServoLabelElement
+let InfLabelElement
 
 class Stream{
     constructor(endpoint) {
@@ -33,17 +34,48 @@ const handleEventServo = (event) => {
     ServoLabelElement.innerText = JSON.parse(event.data)
 }
 
+const handleInf = (event) =>{
+    if (JSON.parse(event.data) > 0){
+        InfLabelElement.innerText = "Someone has passed the door.";
+        img = document.getElementById("img")
+        bttn = document.getElementById("img_bttn")
+        if (img.getAttribute("value").length === 0){
+            img.setAttribute("src", "http://192.168.100.24")
+            bttn.setAttribute("value", "Close live stream.")
+        }
+    }
+
+}
+
 const USSStream = new Stream("/ussStream")
 const ServoStream = new Stream("/servoStream")
+const InfStream = new Stream("/inf")
 
 window.onload = () => {
     USSStream.init(handleEventUSS)
     ServoStream.init(handleEventServo)
+    InfStream.init(handleInf)
     USSLabelElement = document.getElementById("USSLabel")
     ServoLabelElement = document.getElementById("servoLabel")
+    InfLabelElement = document.getElementById("infLabel")
 }
 
 window.onbeforeunload = () => {
     USSStream.close()
     ServoStream.close()
+    InfStream.close()
+}
+
+
+function enableVideo(){
+    img = document.getElementById("img")
+    bttn = document.getElementById("img_bttn")
+    if (img.getAttribute("src").length === 0){
+        img.setAttribute("src", "http://192.168.100.24")
+        bttn.setAttribute("value", "Close live stream.")
+    }
+    else {
+        img.setAttribute("src", "")
+        bttn.setAttribute("value", "Start live stream.")
+    }
 }

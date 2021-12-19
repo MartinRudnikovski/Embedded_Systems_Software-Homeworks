@@ -21,6 +21,7 @@ public class MainMenuController {
     private final EmbeddedSystemService embeddedSystemService;
     String ussAlerts = "-1";
     Integer servoCurrentDegree = 0;
+    Integer inf = 0;
 
     public MainMenuController(EmbeddedSystemService embeddedSystemService) {
         this.embeddedSystemService = embeddedSystemService;
@@ -96,5 +97,19 @@ public class MainMenuController {
     public String servoWasMoved(@RequestBody String position){
         servoCurrentDegree = Integer.parseInt(position.split("=")[1]);
         return "usstemplate";
+    }
+
+    @PostMapping("/infiltration")
+    public String inf(@RequestBody String s){
+        inf = 1;
+        return "usstemplate";
+    }
+
+    @GetMapping("/inf")
+    public Flux<Integer> infiltrationStream(){
+        return Flux.interval(Duration.ofMillis(500))
+                .map(i -> Collections.singletonList(inf))
+                .flatMapIterable(stream -> stream)
+                .distinctUntilChanged();
     }
 }
