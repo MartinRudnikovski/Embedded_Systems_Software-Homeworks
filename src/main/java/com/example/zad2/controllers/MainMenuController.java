@@ -34,7 +34,7 @@ public class MainMenuController {
 
     @GetMapping("/")
     public String navigateToLogIn(){
-        return "redirect:/login.html";
+        return "redirect:/login";
     }
 
     @PostMapping("/mainMenu")
@@ -42,10 +42,10 @@ public class MainMenuController {
         User v;
         if ((v = User.validatePassword(password)) != null) {
             request.getSession().setAttribute("user", v);
-            return "redirect:/mainMenu.html";
+            return "redirect:/mainMenu";
         }
         request.getSession().setAttribute("user", null);
-        return "redirect:/login.html";
+        return "redirect:/login";
     }
 
 
@@ -75,13 +75,13 @@ public class MainMenuController {
     @PostMapping("/clearAlert")
     public String clearAlert(){
         ussAlerts = "-1";
-        return "redirect:/mainMenu.html";
+        return "redirect:/mainMenu";
     }
 
     @PostMapping("/moveServoMotor")
     public String moveServoMotorRight(@RequestParam String direction){
         embeddedSystemService.moveServoMotor(direction.equals("<=") ? "/moveLeft" : "/moveRight");
-        return "redirect:/mainMenu.html";
+        return "redirect:/mainMenu";
     }
 
 
@@ -119,14 +119,14 @@ public class MainMenuController {
     @PostMapping("infOk")
     public String isOk(){
         inf = 0;
-        return "redirect:/mainMenu.html";
+        return "redirect:/mainMenu";
     }
 
     //Clients can toggle the LED
     @PostMapping("/led")
     public String led(){
         embeddedSystemService.ledInteract();
-        return "redirect:/mainMenu.html";
+        return "redirect:/mainMenu";
     }
 
 }
