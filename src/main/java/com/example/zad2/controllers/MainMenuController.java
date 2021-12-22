@@ -34,7 +34,7 @@ public class MainMenuController {
 
     @GetMapping("/")
     public String navigateToLogIn(){
-        return "redirect:/login";
+        return "redirect:/login.html";
     }
 
     @PostMapping("/mainMenu")
@@ -42,10 +42,10 @@ public class MainMenuController {
         User v;
         if ((v = User.validatePassword(password)) != null) {
             request.getSession().setAttribute("user", v);
-            return "redirect:/mainMenu";
+            return "redirect:/mainMenu.html";
         }
         request.getSession().setAttribute("user", null);
-        return "redirect:/login";
+        return "redirect:/login.html";
     }
 
 
@@ -75,13 +75,13 @@ public class MainMenuController {
     @PostMapping("/clearAlert")
     public String clearAlert(){
         ussAlerts = "-1";
-        return "redirect:/mainMenu";
+        return "redirect:/mainMenu.html";
     }
 
     @PostMapping("/moveServoMotor")
     public String moveServoMotorRight(@RequestParam String direction){
         embeddedSystemService.moveServoMotor(direction.equals("<=") ? "/moveLeft" : "/moveRight");
-        return "redirect:/mainMenu";
+        return "redirect:/mainMenu.html";
     }
 
 
@@ -99,12 +99,14 @@ public class MainMenuController {
         return "usstemplate";
     }
 
+    //Embedded system can change the infiltration state on the server
     @PostMapping("/infiltration")
-    public String inf(@RequestBody String s){
+    public String inf(){
         inf = 1;
         return "usstemplate";
     }
 
+    //Update the clients if there is an infiltration
     @GetMapping("/inf")
     public Flux<Integer> infiltrationStream(){
         return Flux.interval(Duration.ofMillis(500))
@@ -113,15 +115,18 @@ public class MainMenuController {
                 .distinctUntilChanged();
     }
 
+    //Clients can reset infiltrator alarm.
     @PostMapping("infOk")
     public String isOk(){
         inf = 0;
-        return "redirect:/mainMenu";
+        return "redirect:/mainMenu.html";
     }
 
+    //Clients can toggle the LED
     @PostMapping("/led")
     public String led(){
         embeddedSystemService.ledInteract();
-        return "redirect:/mainMenu";
+        return "redirect:/mainMenu.html";
     }
+
 }

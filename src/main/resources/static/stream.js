@@ -37,10 +37,8 @@ const handleEventServo = (event) => {
 const handleInf = (event) =>{
     if (JSON.parse(event.data) > 0){
         InfLabelElement.innerText = "Someone has passed the door.";
-        img = document.getElementById("img")
-        bttn = document.getElementById("img_bttn")
-        img.setAttribute("src", "http://192.168.100.24")
-        bttn.setAttribute("value", "Close live stream.")
+        document.getElementById("img").setAttribute("src", "http://192.168.100.24")
+        document.getElementById("img_bttn").setAttribute("value", "Close live stream.")
     }
 
 }
@@ -66,8 +64,8 @@ window.onbeforeunload = () => {
 
 
 function enableVideo(){
-    img = document.getElementById("img")
-    bttn = document.getElementById("img_bttn")
+    let img = document.getElementById("img")
+    let bttn = document.getElementById("img_bttn")
     if (img.getAttribute("src").length === 0){
         img.setAttribute("src", "http://192.168.100.24")
         bttn.setAttribute("value", "Close live stream.")
@@ -78,6 +76,3 @@ function enableVideo(){
     }
 }
 
-function idDisabled(){
-
-}

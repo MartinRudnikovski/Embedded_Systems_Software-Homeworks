@@ -1,13 +1,20 @@
 package com.example.zad2.model;
 
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+
 public class Led extends Peripheral{
+
+    public Led() {
+        pName = "LED";
+        pDescription = "Used for lighting up the space around it.";
+    }
+
     @Override
     public String execute(Object... o) {
         HttpURLConnection connection = null;
-        StringBuilder stringBuilder = new StringBuilder();
 
         try {
             connection = ((EmbeddedSystem) o[0]).openConnection();//open connection
@@ -25,6 +32,6 @@ public class Led extends Peripheral{
             if (connection != null)
                 connection.disconnect();
         }
-        return stringBuilder.toString();
+        return "";
     }
 }
