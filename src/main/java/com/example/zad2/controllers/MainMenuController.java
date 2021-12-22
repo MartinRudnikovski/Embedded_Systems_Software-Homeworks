@@ -116,7 +116,7 @@ public class MainMenuController {
     }
 
     //Clients can reset infiltrator alarm.
-    @PostMapping("infOk")
+    @PostMapping("/infOk")
     public String isOk(){
         inf = 0;
         return "redirect:/mainMenu";
