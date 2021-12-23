@@ -40,7 +40,11 @@ const handleInf = (event) =>{
         document.getElementById("img").setAttribute("src", "http://192.168.100.24")
         document.getElementById("img_bttn").setAttribute("value", "Close live stream.")
     }
-
+    else{
+        InfLabelElement.innerText = "";
+        document.getElementById("img").setAttribute("src", "")
+        document.getElementById("img_bttn").setAttribute("value", "Start live stream.")
+    }
 }
 
 const USSStream = new Stream("/ussStream")
