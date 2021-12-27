@@ -1,5 +1,6 @@
 package com.example.zad2.controllers;
 
+import com.example.zad2.model.ServerSentEventsStream;
 import com.example.zad2.model.User;
 import com.example.zad2.services.EmbeddedSystemService;
 import org.springframework.http.MediaType;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import reactor.core.publisher.Flux;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Collections;
+import java.util.stream.Stream;
 
 
 @Controller
@@ -22,9 +26,56 @@ public class MainMenuController {
     String ussAlerts = "-1";
     Integer servoCurrentDegree = 0;
     Integer inf = 0;
+    String airH = "Cannot connect to server.";
+    String airT = "Cannot connect to server.";
+    String soil = "Cannot connect to server.";
 
     public MainMenuController(EmbeddedSystemService embeddedSystemService) {
         this.embeddedSystemService = embeddedSystemService;
+
+        Thread airHumidityThread = new Thread(() -> {
+            ServerSentEventsStream sse = embeddedSystemService.airHumiditySensor();
+            Stream<String> str;
+            try {
+                str = sse.getClient().send(sse.getRequest(), HttpResponse.BodyHandlers.ofLines()).body();
+            } catch (IOException | InterruptedException e) {
+                return;
+            }
+            str.filter( f ->f.contains(":")).map( m -> m.split(":")[1]).forEach( i -> airH = i);
+        });
+        airHumidityThread.start();
+
+        Thread airTemperatureThread = new Thread(() -> {
+            ServerSentEventsStream sse = embeddedSystemService.airTemperatureSensor();
+            Stream<String> str;
+            try {
+                str = sse.getClient().send(sse.getRequest(), HttpResponse.BodyHandlers.ofLines()).body();
+            } catch (IOException | InterruptedException e) {
+                return;
+            }
+            str.filter( f ->f.contains(":")).map( m -> m.split(":")[1]).forEach( i -> airT = i);
+        });
+        airTemperatureThread.start();
+
+
+
+        Thread soilMoistureThread = new Thread(() -> {
+            ServerSentEventsStream sse = embeddedSystemService.soilMoistureSensor();
+            Stream<String> str;
+            try {
+                str = sse.getClient().send(sse.getRequest(), HttpResponse.BodyHandlers.ofLines()).body();
+            } catch (IOException | InterruptedException e) {
+                return;
+            }
+            str.filter( f ->f.contains(":"))
+                    .map( m -> m.split(":")[1].trim())
+                    .map( st -> ( ( (float)(4095.0 - 1500.0) - (Integer.parseInt(st) - 1500) )/(4095.0 - 1500.0) ) * 100)
+                    .map(integer -> Integer.toString(integer.intValue()))
+                    .forEach( i ->{ soil = i;
+                        System.out.println(soil);});
+        });
+        soilMoistureThread.start();
+
     }
 
     @GetMapping("/login")
@@ -129,4 +180,49 @@ public class MainMenuController {
         return "redirect:/mainMenu";
     }
 
+    @GetMapping(value = "/airHumidity", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> airHumidity(){
+        return Flux.interval(Duration.ofMillis(500))
+                .map( i -> Collections.singletonList(airH))
+                .flatMapIterable(streams -> streams)
+                .distinctUntilChanged();
+    }
+
+    @GetMapping(value = "/airTemperature", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> airTemperature(){
+        return Flux.interval(Duration.ofMillis(500))
+                .map( i -> Collections.singletonList(airT))
+                .flatMapIterable(streams -> streams)
+                .distinctUntilChanged();
+    }
+
+    @GetMapping(value = "/soilMoisture", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> soilMoisture(){
+        return Flux.interval(Duration.ofMillis(500))
+                .map( i -> Collections.singletonList(soil))
+                .flatMapIterable(streams -> streams)
+                .distinctUntilChanged();
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

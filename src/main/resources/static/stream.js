@@ -1,6 +1,9 @@
 let USSLabelElement
 let ServoLabelElement
 let InfLabelElement
+let AirHumidityLabelElement
+let AirTemperatureLabelElement
+let SoilMoistureLabelElement
 
 class Stream{
     constructor(endpoint) {
@@ -10,6 +13,7 @@ class Stream{
     init(handleEvent) {
         this.eventSource = new EventSource(this.endpoint)
         this.eventSource.addEventListener("message", handleEvent)
+        this.eventSource.addEventListener("data", handleEvent)
         this.eventSource.onerror = () =>{
             console.log("Error occurred")
             this.close()
@@ -21,12 +25,22 @@ class Stream{
     }
 }
 
+const handleSoilMoisture = (event) => {
+  SoilMoistureLabelElement.innerText = "Soil moisture = " + JSON.parse(event.data) + "%"
+}
+
+const handleAirHumidity = (event) => {
+    AirHumidityLabelElement.innerText = "Humidity = " + JSON.parse(event.data) + "%"
+}
+
+const handleAirTemperature = (event) => {
+    AirTemperatureLabelElement.innerText = "Temperature = " + JSON.parse(event.data) + "C"
+}
+
 const handleEventUSS = (event) => {
     const val = JSON.parse(event.data)
-    if (val <= 20 && val > -1){
+    if (val <= 20 && val > -1)
         USSLabelElement.innerText = "Someone has entered the room!"
-        USSStream.close()
-    }
 
 }
 
@@ -50,20 +64,34 @@ const handleInf = (event) =>{
 const USSStream = new Stream("/ussStream")
 const ServoStream = new Stream("/servoStream")
 const InfStream = new Stream("/inf")
+const AirHumidityStream = new Stream("/airHumidity")
+const AirTemperatureStream = new Stream("/airTemperature")
+const SoilMoistureStream = new Stream("soilMoisture")
 
 window.onload = () => {
     USSStream.init(handleEventUSS)
     ServoStream.init(handleEventServo)
     InfStream.init(handleInf)
+    AirHumidityStream.init(handleAirHumidity)
+    AirTemperatureStream.init(handleAirTemperature)
+    SoilMoistureStream.init(handleSoilMoisture)
+
+
     USSLabelElement = document.getElementById("USSLabel")
     ServoLabelElement = document.getElementById("servoLabel")
     InfLabelElement = document.getElementById("infLabel")
+    AirHumidityLabelElement = document.getElementById("airHumidityLabel")
+    AirTemperatureLabelElement = document.getElementById("airTemperatureLabel")
+    SoilMoistureLabelElement = document.getElementById("soilMoistureLabel")
 }
 
 window.onbeforeunload = () => {
     USSStream.close()
     ServoStream.close()
     InfStream.close()
+    AirHumidityStream.close()
+    AirTemperatureStream.close()
+    SoilMoistureLabelElement.close()
 }
 
 

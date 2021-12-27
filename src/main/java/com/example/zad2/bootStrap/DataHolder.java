@@ -4,8 +4,10 @@ import com.example.zad2.model.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Component
 public class DataHolder {
@@ -46,6 +48,28 @@ public class DataHolder {
             @Override
             public String execute(Object... o) {
                 return (String) this.getPeripheralList().stream().filter(i-> i instanceof Led).findFirst().get().execute(this, o);
+            }
+        });
+
+        embeddedSystemList.add(new EmbeddedSystem(
+                "Plant care device",
+                "Measures the humidity and temperature of the air.",
+                "http://192.168.100.27",
+                new AirHumidityAndTemperatureSensor(),
+                new SoilMoistureSensor()
+        ) {
+            @Override
+            public ServerSentEventsStream execute(Object... o) {
+                if (o.length == 0)
+                    return (ServerSentEventsStream) this.getPeripheralList().stream()
+                            .filter(i -> i.getPName().equals("Soil moisture sensor"))
+                            .findFirst()
+                            .get()
+                            .execute(this);
+                return (ServerSentEventsStream) this.getPeripheralList().stream()
+                        .findFirst()
+                        .get()
+                        .execute(this, o[0]);
             }
         });
     }
