@@ -1,13 +1,17 @@
 package com.example.zad2.bootStrap;
 
-import com.example.zad2.model.*;
+import com.example.zad2.model.abstractions.EmbeddedSystem;
+import com.example.zad2.model.embeddedSystems.PlantCareEmbeddedSystem;
+import com.example.zad2.model.embeddedSystems.SecurityCameraEmbeddedSystem;
+import com.example.zad2.model.peripherals.Camera;
+import com.example.zad2.model.peripherals.Led;
+import com.example.zad2.model.peripherals.ServoMotor;
+import com.example.zad2.model.peripherals.UltraSonicSensor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Component
 public class DataHolder {
@@ -51,7 +55,9 @@ public class DataHolder {
             }
         });
 
-        embeddedSystemList.add(new EmbeddedSystem(
+        embeddedSystemList.add(new PlantCareEmbeddedSystem("http://192.168.100.27"));
+
+        /*embeddedSystemList.add(new EmbeddedSystem(
                 "Plant care device",
                 "Measures the humidity and temperature of the air.",
                 "http://192.168.100.27",
@@ -71,6 +77,6 @@ public class DataHolder {
                         .get()
                         .execute(this, o[0]);
             }
-        });
+        });*/
     }
 }

@@ -1,6 +1,6 @@
 package com.example.zad2.services.impl;
 
-import com.example.zad2.model.EmbeddedSystem;
+import com.example.zad2.model.abstractions.EmbeddedSystem;
 import com.example.zad2.model.ServerSentEventsStream;
 import com.example.zad2.repositories.InMemoryEmbeddedSystemRepository;
 import com.example.zad2.services.EmbeddedSystemService;

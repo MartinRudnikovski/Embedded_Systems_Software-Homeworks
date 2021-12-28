@@ -1,4 +1,4 @@
-package com.example.zad2.model;
+package com.example.zad2.model.abstractions;
 
 import lombok.Data;
 import lombok.NonNull;
@@ -12,11 +12,17 @@ import java.util.List;
 
 @Data
 public abstract class EmbeddedSystem {
-    String eName;
-    String eDescription;
-    List<Peripheral> peripheralList;
 
-    private String url;
+    public enum EmbeddedSystems {
+        PLANTCAREDEVICE,
+        SECURITYCAMERA
+    }
+
+    protected String eName;
+    protected String eDescription;
+    protected List<Peripheral> peripheralList;
+
+    protected String url;
 
     public EmbeddedSystem(@NonNull String eName, @NonNull String eDescription,@NonNull String url, @NonNull Peripheral... peripherals) {
         this.eName = eName;
@@ -24,6 +30,11 @@ public abstract class EmbeddedSystem {
         this.peripheralList = new ArrayList<>();
         this.peripheralList.addAll(Arrays.asList(peripherals));
         this.url = url;
+    }
+
+    //Used to make an embedded system model
+    public EmbeddedSystem(){
+
     }
 
     public HttpURLConnection openConnection() throws IOException {

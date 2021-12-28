@@ -1,11 +1,14 @@
-package com.example.zad2.model;
+package com.example.zad2.model.peripherals;
 
+
+import com.example.zad2.model.abstractions.EmbeddedSystem;
+import com.example.zad2.model.abstractions.Peripheral;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
 
-public class Led extends Peripheral{
+public class Led extends Peripheral {
 
     public Led() {
         pName = "LED";

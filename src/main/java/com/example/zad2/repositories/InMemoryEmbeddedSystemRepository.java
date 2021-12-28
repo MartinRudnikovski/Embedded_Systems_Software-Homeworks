@@ -1,13 +1,13 @@
 package com.example.zad2.repositories;
 
 import com.example.zad2.bootStrap.DataHolder;
-import com.example.zad2.model.EmbeddedSystem;
+import com.example.zad2.model.abstractions.EmbeddedSystem;
 import com.example.zad2.model.ServerSentEventsStream;
+import com.example.zad2.model.embeddedSystems.PlantCareEmbeddedSystem;
+import com.example.zad2.model.embeddedSystems.SecurityCameraEmbeddedSystem;
 import org.springframework.stereotype.Repository;
 
-import java.net.http.HttpRequest;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Repository
 public class InMemoryEmbeddedSystemRepository {
@@ -34,7 +34,7 @@ public class InMemoryEmbeddedSystemRepository {
 
     public ServerSentEventsStream getAirHumidityStream(boolean humidity){
         return (ServerSentEventsStream) DataHolder.embeddedSystemList.stream()
-                .filter(i ->i.getEName().equals("Plant care device"))
+                .filter(i -> i instanceof PlantCareEmbeddedSystem)
                 .findFirst()
                 .get()
                 .execute(humidity);
@@ -42,10 +42,11 @@ public class InMemoryEmbeddedSystemRepository {
 
     public ServerSentEventsStream getSoilMoistureStream(){
         return (ServerSentEventsStream) DataHolder.embeddedSystemList.stream()
-                .filter(i -> i.getEName().equals("Plant care device"))
+                .filter(i -> i instanceof PlantCareEmbeddedSystem)
                 .findFirst()
                 .get()
                 .execute();
     }
+
 
 }

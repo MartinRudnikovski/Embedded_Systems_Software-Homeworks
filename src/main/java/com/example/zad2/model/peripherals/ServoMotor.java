@@ -1,11 +1,14 @@
-package com.example.zad2.model;
+package com.example.zad2.model.peripherals;
+
+import com.example.zad2.model.abstractions.EmbeddedSystem;
+import com.example.zad2.model.abstractions.Peripheral;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
-public class ServoMotor extends Peripheral{
+public class ServoMotor extends Peripheral {
 
     public ServoMotor(){
         pName = "ServoMotor";

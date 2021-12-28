@@ -1,8 +1,12 @@
-package com.example.zad2.model;
+package com.example.zad2.model.peripherals;
+
+import com.example.zad2.model.ServerSentEventsStream;
+import com.example.zad2.model.abstractions.EmbeddedSystem;
+import com.example.zad2.model.abstractions.Peripheral;
 
 import java.net.URISyntaxException;
 
-public class AirHumidityAndTemperatureSensor extends Peripheral{
+public class AirHumidityAndTemperatureSensor extends Peripheral {
 
     public AirHumidityAndTemperatureSensor(){
         pName = "Air humidity and temperature sensor";
